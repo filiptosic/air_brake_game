@@ -173,11 +173,15 @@ while True:
     write(press2_to_string, (300, 200), text_color)
     if pressure1 <= 60:
         text_color = warning_color
-        write("LOW AIR", (45, 220), text_color)
+        write("LOW AIR", (55, 220), text_color)
+    if pressure1 <= 60:
+        text_color = warning_color
+        write("LOW AIR", (265, 220), text_color)
     else:
         text_color = color
     if pressure1 < 38:
         maxi_size = [200, 200]
+        maxi_location = [450, 150]
 
     pygame.display.update()
     # print(event)
