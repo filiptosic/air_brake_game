@@ -7,6 +7,8 @@ clock = pygame.time.Clock()
 pygame.init()
 pygame.display.set_caption("Air Brake Game")
 screen = pygame.display.set_mode((900, 720))
+
+# adds ability to set what happens if a key is held. These could be changed to variables later to allow for different responses from different buttons
 pygame.key.set_repeat(2000, 1000)
 radar_len = 50
 radar = (100,100)
@@ -32,6 +34,7 @@ while True:
         pygame.draw.rect(screen, (255, 0, 0), (0, 0, 100, 100)) 
         pygame.draw.line(screen, (0, 0, 255), (0, 0), (100, 50), 7)
         pygame.display.flip()
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
                 angle += 10
