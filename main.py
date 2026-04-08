@@ -1,6 +1,7 @@
 import sys
 import pygame
 import time
+import math
 
 class Sprite():
     def __init__(self, size, reduced_size):
@@ -70,9 +71,12 @@ truck_on = True
 #write function used to display text on screen
 def write(text,location,color=(240,240,240)):
     screen.blit(font.render(text,True,color),location)
-
+radar_len = 50
+radar = (100,100)
+angle = pressure1
 while True:
     pressed = pygame.key.get_pressed()
+    angle = pressure1
     for event in pygame.event.get():
         screen.fill((0, 0, 0))
         
@@ -84,6 +88,8 @@ while True:
         #initializes key_on variable which is used to increment pressure every x milliseconds as determined by time_timer variable
         key_on = pygame.USEREVENT
         pygame.time.set_timer(key_on, time_timer)
+        x = radar[0] + math.cos(math.radians(angle)) * radar_len
+        y = radar[1] + math.sin(math.radians(angle)) * radar_len
 
         #resized brake, gas, and maxi variables. These have to be done within this loop otherwise they will not reset properly.
         resize_brake = pygame.transform.smoothscale(brake, brake_size)
@@ -99,11 +105,11 @@ while True:
         #displays all sprites and images onto screen
         screen.blit(resize_air1, air1_location)
         screen.blit(resize_air2, air2_location)
-        screen.blit(resize_needle, needle_location)
+        # screen.blit(resize_needle, needle_location)
         screen.blit(resize_brake, brake_location)
         screen.blit(resize_gas, gas_location)
         screen.blit(resize_maxi, maxi_location)
-
+        
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -126,7 +132,8 @@ while True:
             write("Truck ON", (450, 460), color=('green'))
         else:
             write("Truck OFF", (450, 460), color=('yellow'))
-        
+        pygame.draw.line(screen, ("red"), radar, (x,y), 5)
+        pygame.display.flip()
         # increases build speed up by changing timer interval if acclerator pedal is held down. This will be converted to clickable button later.
         # meant to represent increased idle speed/RPM
         if pressed[pygame.K_g] and truck_on == True:

@@ -31,13 +31,15 @@ while True:
 
         # then render the line radar->(x,y)
         pygame.draw.line(screen, ("red"), radar, (x,y), 1)
-        pygame.draw.rect(screen, (255, 0, 0), (0, 0, 100, 100)) 
+        # pygame.draw.rect(screen, (255, 0, 0), (0, 0, 100, 100)) 
         pygame.draw.line(screen, (0, 0, 255), (0, 0), (100, 50), 7)
         pygame.display.flip()
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
                 angle += 10
+                print(angle)
+                print(x, y)
                 print("hello world")
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_d:
