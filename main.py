@@ -37,7 +37,7 @@ gas_location = [155, 550]
 maxi_location = [500, 200]
 air1_location = [0, 0]
 air2_location = [210, 0]
-needle_location = [25, 70]
+needle_location = [56.7, 125]
 
 #resize images in pygame using transform.smoothscale() method
 resize_maxi = pygame.transform.smoothscale(maxi, maxi_size)
@@ -64,6 +64,7 @@ color = (220, 220, 220)
 time_timer = 1000
 pressure1 = 120
 pressure2 = 120
+angle = 340
 
 #used only for displaying truck on or off. Air pressure starts and stops building based off of key_on variable. This could be removed in later iterations
 truck_on = True
@@ -71,15 +72,18 @@ truck_on = True
 #write function used to display text on screen
 def write(text,location,color=(240,240,240)):
     screen.blit(font.render(text,True,color),location)
+def change_angle(difference):
+    radar[0] + math.cos(math.radians(angle)) * radar_len
+    radar[1] + math.sin(math.radians(angle)) * radar_len
 radar_len = 50
 radar = (100,100)
-angle = pressure1
+angle = 328
+
 while True:
     pressed = pygame.key.get_pressed()
-    angle = pressure1
+
     for event in pygame.event.get():
         screen.fill((0, 0, 0))
-        
         #list of truck controls
         write("Press 0 to start truck", (550,15))
         write("Press 1 to shut off", (550,35))
@@ -88,8 +92,7 @@ while True:
         #initializes key_on variable which is used to increment pressure every x milliseconds as determined by time_timer variable
         key_on = pygame.USEREVENT
         pygame.time.set_timer(key_on, time_timer)
-        x = radar[0] + math.cos(math.radians(angle)) * radar_len
-        y = radar[1] + math.sin(math.radians(angle)) * radar_len
+
 
         #resized brake, gas, and maxi variables. These have to be done within this loop otherwise they will not reset properly.
         resize_brake = pygame.transform.smoothscale(brake, brake_size)
@@ -99,6 +102,7 @@ while True:
         #builds pressure up to maximum of 120 if key is on
         if event.type == key_on and pressure1 < 120:
             pressure1 += 1
+            angle += 1
         if event.type == key_on and pressure2 < 120:
             pressure2 += 1
 
@@ -132,14 +136,14 @@ while True:
             write("Truck ON", (450, 460), color=('green'))
         else:
             write("Truck OFF", (450, 460), color=('yellow'))
-        pygame.draw.line(screen, ("red"), radar, (x,y), 5)
-        pygame.display.flip()
+
         # increases build speed up by changing timer interval if acclerator pedal is held down. This will be converted to clickable button later.
         # meant to represent increased idle speed/RPM
         if pressed[pygame.K_g] and truck_on == True:
                 key_on = True
                 if pressure1 < 120:
                     pressure1 += 1
+                    angle += 3
                 if pressure2 < 120:
                     pressure2 += 1
                 time_timer = 800
@@ -165,16 +169,23 @@ while True:
                 brake_location[1] += 15
                 if 2 <= pressure1:
                     pressure1 -= 2
+                    angle -= 3
                 if 2 <= pressure2:
                     pressure2 -= 2
                 print(pressure1)
+                print(x,y)
+                print(angle)
+                print(radar)
     
     # brings brake size and location back to normal after presses
     brake_location = [30, 550]
     brake_size = [125, 150]
     press1_to_string = str(pressure1)
     press2_to_string = str(pressure2)
-
+    x = radar[0] + math.cos(math.radians(angle)) * radar_len
+    y = radar[1] + math.sin(math.radians(angle)) * radar_len
+    pygame.draw.line(screen, ("red"), radar, (x, y), 5)
+    pygame.display.flip()
     # displays air pressure
     write(press1_to_string, (90, 200), text_color)
     write(press2_to_string, (300, 200), text_color)
@@ -189,8 +200,12 @@ while True:
     if pressure1 < 38:
         maxi_size = [200, 200]
         maxi_location = [450, 150]
+    else:
+        maxi_size = [100, 100]
+        maxi_location = [500, 200]
 
     pygame.display.update()
+    print(angle)
     # print(event)
     clock.tick(60)
     
